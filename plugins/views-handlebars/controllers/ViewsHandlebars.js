@@ -84,16 +84,14 @@ module.exports = {
     let getDataPromises = files.map(m => {
       let modelName = capitalizeFirstLetter(m);
       // TODO need to find a way to execute modelName.findOne()
-      return Post.findOne();
+      return eval(modelName).findOne();
     });
     let templates = await Promise.all(readTemplatePromises);
     let datas = await Promise.all(getDataPromises);
 
     let writeTemplatePromises = files.map((m, i) => {
       let template = Handlebars.compile(String(templates[i]));
-      console.log({...datas[i], model: m});
       let result = template(datas[i]);
-      console.log(result);
       return writeFile(__dirname + '/../../../public/' + m + '.html', result);
     });
 
